@@ -3,6 +3,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/users.entity';
 import { UsersRepository } from './repositories/users.repository';
+import { Authentication } from './entities/authentications.entity';
+import { AuthenticationsRepository } from './repositories/authentications.repository';
 
 @Module({
   imports: [
@@ -17,12 +19,12 @@ import { UsersRepository } from './repositories/users.repository';
         port: configService.get<number>('POSTGRES_PORT'),
         database: configService.get<string>('POSTGRES_DATABASE'),
         synchronize: true,
-        entities: [User],
+        entities: [User, Authentication],
       }),
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Authentication]),
   ],
-  providers: [UsersRepository],
-  exports: [UsersRepository],
+  providers: [UsersRepository, AuthenticationsRepository],
+  exports: [UsersRepository, AuthenticationsRepository],
 })
 export class DatasourcesModule {}

@@ -5,6 +5,7 @@ import { UserLoginReqBodyDTO } from './dto/user-login.dto';
 import { UsersRepository } from 'src/modules/datasources/repositories/users.repository';
 import {
   AuthenticationTokens,
+  JWTPayload,
   TokenPayload,
 } from 'src/commons/tokens/jwt.interface';
 import { TokensService } from './tokens.service';
@@ -36,6 +37,7 @@ export class AuthenticationsService {
 
     const tokenPayload: TokenPayload = {
       username,
+      userId: user.id,
       tokenId: result.id,
     };
 
@@ -55,12 +57,14 @@ export class AuthenticationsService {
   private async generateAuthenticationTokens(
     payload: TokenPayload,
   ): Promise<AuthenticationTokens> {
-    const accessToken = this.tokensService.sign(
-      { username: payload.username },
+    const accessToken = this.tokensService.signAccessToken(
+      payload.username,
       constants.accessTokenExpirationTime,
     );
-    const refreshToken = this.tokensService.sign(
-      payload,
+
+    const refreshToken = this.tokensService.signRefreshToken(
+      payload.userId,
+      payload.tokenId,
       constants.refreshTokenExpirationTime,
     );
 

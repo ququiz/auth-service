@@ -76,7 +76,7 @@ export class TokensService {
     }
   }
 
-  public async decodePayload(token: string): Promise<any> {
+  public async decodePayload(token: string): Promise<JWTPayload> {
     return this.jwtService.decode(token) as JWTPayload;
   }
 }

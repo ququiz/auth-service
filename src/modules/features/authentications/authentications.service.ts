@@ -10,6 +10,10 @@ import {
 import { TokensService } from './tokens.service';
 import { constants } from 'src/commons/constants';
 import { UserLogoutReqBodyDTO } from './dto/user-logout.dto';
+import {
+  TokenRotationReqBodyDTO,
+  TokenRotationResponse,
+} from './dto/token-rotation.dto';
 
 @Injectable()
 export class AuthenticationsService {
@@ -44,6 +48,28 @@ export class AuthenticationsService {
     return this.generateAuthenticationTokens(tokenPayload);
   }
 
+  public async putTokenRotation(
+    payload: TokenRotationReqBodyDTO,
+  ): Promise<TokenRotationResponse> {
+    const { refreshToken } = payload;
+
+    await this.tokensService.verifyRefreshToken(refreshToken);
+
+    const tokenPayload = await this.tokensService.decodePayload(refreshToken);
+
+    const authentication =
+      await this.authenticationsRepository.findOneByIdAndUserId(
+        tokenPayload.jti!,
+        tokenPayload.sub,
+      );
+
+    if (!authentication) throw new UnauthorizedException('Token is logged out');
+
+    const accessToken = this.tokensService.signAccessToken(tokenPayload.sub);
+
+    return { accessToken };
+  }
+
   public async deleteUserLogout(payload: UserLogoutReqBodyDTO): Promise<void> {
     const { refreshToken } = payload;
     await this.tokensService.verifyRefreshToken(refreshToken);
@@ -66,15 +92,11 @@ export class AuthenticationsService {
   private async generateAuthenticationTokens(
     payload: TokenPayload,
   ): Promise<AuthenticationTokens> {
-    const accessToken = this.tokensService.signAccessToken(
-      payload.username,
-      constants.accessTokenExpirationTime,
-    );
+    const accessToken = this.tokensService.signAccessToken(payload.username);
 
     const refreshToken = this.tokensService.signRefreshToken(
       payload.userId,
       payload.tokenId,
-      constants.refreshTokenExpirationTime,
     );
 
     return { accessToken, refreshToken };

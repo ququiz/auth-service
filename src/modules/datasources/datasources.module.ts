@@ -6,6 +6,9 @@ import { UsersRepository } from './repositories/users.repository';
 import { Authentication } from './entities/authentications.entity';
 import { AuthenticationsRepository } from './repositories/authentications.repository';
 
+const entities = [User, Authentication];
+const repositories = [UsersRepository, AuthenticationsRepository];
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -19,12 +22,12 @@ import { AuthenticationsRepository } from './repositories/authentications.reposi
         port: configService.get<number>('POSTGRES_PORT'),
         database: configService.get<string>('POSTGRES_DATABASE'),
         synchronize: true,
-        entities: [User, Authentication],
+        entities,
       }),
     }),
-    TypeOrmModule.forFeature([User, Authentication]),
+    TypeOrmModule.forFeature(entities),
   ],
-  providers: [UsersRepository, AuthenticationsRepository],
-  exports: [UsersRepository, AuthenticationsRepository],
+  providers: [...repositories],
+  exports: [...repositories],
 })
 export class DatasourcesModule {}

@@ -12,7 +12,18 @@ services:
       - POSTGRES_DB=${POSTGRES_DATABASE}
     env_file:
       - ./.env
-
-
-
+  authentications:
+    container_name: "dogker-authentications"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3001'
+    env_file:
+      - ./.env
+    volumes:
+      - ./src:/app/src
+    depends_on:
+      - postgres
+    network_mode: host
 

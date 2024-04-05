@@ -5,11 +5,11 @@ import { UserLoginReqBodyDTO } from './dto/user-login.dto';
 import { UsersRepository } from 'src/modules/datasources/repositories/users.repository';
 import {
   AuthenticationTokens,
-  JWTPayload,
   TokenPayload,
 } from 'src/commons/tokens/jwt.interface';
 import { TokensService } from './tokens.service';
 import { constants } from 'src/commons/constants';
+import { UserLogoutReqBodyDTO } from './dto/user-logout.dto';
 
 @Injectable()
 export class AuthenticationsService {
@@ -42,6 +42,15 @@ export class AuthenticationsService {
     };
 
     return this.generateAuthenticationTokens(tokenPayload);
+  }
+
+  public async deleteUserLogout(payload: UserLogoutReqBodyDTO): Promise<void> {
+    const { refreshToken } = payload;
+    await this.tokensService.verifyRefreshToken(refreshToken);
+
+    const tokenPayload = await this.tokensService.decodePayload(refreshToken);
+
+    await this.authenticationsRepository.delete({ id: tokenPayload.jti! });
   }
 
   private async comparePassword(

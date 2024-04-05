@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions, TokenExpiredError } from '@nestjs/jwt';
 import { constants } from 'src/commons/constants';
+import { JWTPayload } from 'src/commons/tokens/jwt.interface';
 
 @Injectable()
 export class TokensService {
@@ -57,7 +58,7 @@ export class TokensService {
           new Date(),
         );
       } else {
-        throw new UnauthorizedException();
+        throw new UnauthorizedException('Invalid access token');
       }
     }
   }
@@ -71,7 +72,11 @@ export class TokensService {
 
       return true;
     } catch (err) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid refresh token');
     }
+  }
+
+  public async decodePayload(token: string): Promise<any> {
+    return this.jwtService.decode(token) as JWTPayload;
   }
 }

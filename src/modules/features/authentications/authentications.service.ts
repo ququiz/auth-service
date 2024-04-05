@@ -8,7 +8,6 @@ import {
   TokenPayload,
 } from 'src/commons/tokens/jwt.interface';
 import { TokensService } from './tokens.service';
-import { constants } from 'src/commons/constants';
 import { UserLogoutReqBodyDTO } from './dto/user-logout.dto';
 import {
   TokenRotationReqBodyDTO,
@@ -65,7 +64,10 @@ export class AuthenticationsService {
 
     if (!authentication) throw new UnauthorizedException('Token is logged out');
 
-    const accessToken = this.tokensService.signAccessToken(tokenPayload.sub);
+    const accessToken = this.tokensService.signAccessToken(
+      authentication.user.id,
+      authentication.user.username,
+    );
 
     return { accessToken };
   }
@@ -92,7 +94,10 @@ export class AuthenticationsService {
   private async generateAuthenticationTokens(
     payload: TokenPayload,
   ): Promise<AuthenticationTokens> {
-    const accessToken = this.tokensService.signAccessToken(payload.username);
+    const accessToken = this.tokensService.signAccessToken(
+      payload.userId,
+      payload.username,
+    );
 
     const refreshToken = this.tokensService.signRefreshToken(
       payload.userId,

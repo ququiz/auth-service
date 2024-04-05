@@ -12,18 +12,19 @@ export class TokensService {
   ) {}
 
   public signAccessToken(
+    userId: string,
     username: string,
     expiresIn = constants.accessTokenExpirationTime,
   ): string {
     const options: JwtSignOptions = {
       privateKey: this.configService.get<string>('JWT_PRIVATE_KEY'),
       algorithm: 'ES256',
-      subject: username,
+      subject: userId,
       expiresIn,
     };
 
     if (expiresIn) options.expiresIn = expiresIn;
-    const accessToken = this.jwtService.sign({}, options);
+    const accessToken = this.jwtService.sign({ username }, options);
     return accessToken;
   }
 

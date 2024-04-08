@@ -7,6 +7,7 @@ import { UsersService } from './users.service';
 import { SuccessResponse } from 'src/commons/interfaces';
 import { GrpcMethod } from '@nestjs/microservices';
 import { GetUserReqDto, GetUserResDto } from './dtos/get-user.dto';
+import { ValidateGrpcInput } from 'src/commons/decorators';
 
 @Controller('users')
 export class UsersController {
@@ -25,6 +26,7 @@ export class UsersController {
   }
 
   @GrpcMethod('UsersService', 'getUserById')
+  @ValidateGrpcInput(GetUserReqDto)
   public async getUserById(data: GetUserReqDto): Promise<GetUserResDto> {
     return this.usersService.getUserById(data);
   }

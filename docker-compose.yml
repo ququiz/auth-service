@@ -26,6 +26,7 @@ services:
       - ./.env
     volumes:
       - ./src:/app/src
+      - ./protos:/app/src
     depends_on:
       - postgres
     networks:

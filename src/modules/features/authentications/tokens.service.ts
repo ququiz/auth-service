@@ -18,7 +18,7 @@ export class TokensService {
   ): string {
     const options: JwtSignOptions = {
       privateKey: this.configService.get<string>('JWT_PRIVATE_KEY'),
-      algorithm: 'ES256',
+      algorithm: 'ES512',
       subject: userId,
       expiresIn,
     };
@@ -48,7 +48,7 @@ export class TokensService {
     try {
       this.jwtService.verify(token, {
         secret: this.configService.get<string>('JWT_PUBLIC_KEY'),
-        algorithms: ['ES256'],
+        algorithms: ['ES512'],
       });
 
       return true;

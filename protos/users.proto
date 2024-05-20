@@ -4,10 +4,15 @@ package users;
 
 service UsersService {
   rpc getUserById(GetUserRequest) returns (User) {}
+  rpc getUserByIds(GetUserRequestByIds) returns (GetUserResponseByIds) {}
 }
 
 message GetUserRequest {
   string id = 1; // UUID
+}
+
+message GetUserRequestByIds {
+  repeated string ids = 1; // UUID
 }
 
 message User {
@@ -15,5 +20,9 @@ message User {
   string email = 2;
   string fullname = 3;
   string username = 4;
+}
+
+message GetUserResponseByIds {
+  repeated User users = 1;
 }
 

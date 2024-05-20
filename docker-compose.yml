@@ -20,8 +20,8 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 3001:3000
-      - 4001:4000
+      - 3501:3000
+      - 4501:4000
     env_file:
       - ./.env
     volumes:

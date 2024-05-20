@@ -1,8 +1,14 @@
-import { IsUUID } from 'class-validator';
+import { IsArray, IsUUID } from 'class-validator';
 
 export class GetUserReqDto {
   @IsUUID()
   id: string;
+}
+
+export class GetUserByIdsReqDto {
+  @IsArray()
+  @IsUUID('all', { each: true })
+  ids: string[];
 }
 
 export class GetUserResDto {
@@ -10,4 +16,8 @@ export class GetUserResDto {
   email: string;
   fullname: string;
   username: string;
+}
+
+export class GetUserByIdsResDto {
+  users: GetUserResDto[];
 }

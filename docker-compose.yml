@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   postgres:
-    container_name: "dogker-postgres"
+    container_name: "ququiz-postgres"
     image: 'postgres:latest'
     ports:
       - '5432:5432'
@@ -13,9 +13,9 @@ services:
     env_file:
       - ./.env
     networks:
-      - dogker
+      - ququiz
   authentications:
-    container_name: "dogker-authentications"
+    container_name: "ququiz-authentications"
     build:
       context: .
       dockerfile: Dockerfile
@@ -30,7 +30,7 @@ services:
     depends_on:
       - postgres
     networks:
-      - dogker
+      - ququiz
 networks:
-  dogker:
+  ququiz:
 

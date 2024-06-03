@@ -37,7 +37,7 @@ export class UsersController {
   }
 
   @GrpcMethod('UsersService', 'getUserByIds')
-  @ValidateGrpcInput(GetUserReqDto)
+  @ValidateGrpcInput(GetUserByIdsReqDto)
   public async getUserByIds(
     data: GetUserByIdsReqDto,
   ): Promise<GetUserByIdsResDto> {

@@ -5,6 +5,7 @@ import { DatasourcesModule } from './modules/datasources/datasources.module';
 import { UsersModule } from './modules/features/users/users.module';
 import { AuthenticationsModule } from './modules/features/authentications/authentications.module';
 import { InterceptorModule } from './commons/interceptors/interceptors.module';
+import { HealthModule } from './commons/health/health.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { InterceptorModule } from './commons/interceptors/interceptors.module';
     UsersModule,
     AuthenticationsModule,
     InterceptorModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
